@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AboutActivity"
-    android:background="@color/Dodger_Blue">
+    android:background="@color/dodger_Blue">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -68,7 +68,7 @@
             tools:layout_editor_absoluteY="359dp" />
 
         <Button
-            android:id="@+id/back_bt"
+            android:id="@+id/workouts_bt"
             android:layout_width="75dp"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

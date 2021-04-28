@@ -32,5 +32,16 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="250dp" />
+    <Button
+        android:id="@+id/workouts_bt"
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="53dp"
+        android:background="@android:color/white"
+        android:text="back"
+        tools:layout_editor_absoluteX="35dp"
+        tools:layout_editor_absoluteY="482dp" />
 </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
