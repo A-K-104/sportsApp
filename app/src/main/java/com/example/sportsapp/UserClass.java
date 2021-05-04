@@ -1,38 +1,47 @@
 package com.example.sportsapp;
 
+import android.util.Log;
+
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class UserClass {
-    private String firstName;
-    private String lastName;
+
+    private String userName;
     private double weight;
     private double height;
     private Date dateOfBirth;
     private boolean gender;//male=true // female= false
-    public UserClass(String name, String lastName, double weight, double height, Date dateOfBirth,boolean gender) {
-        this.firstName = name;
-        this.lastName = lastName;
+    private int stepsStartMonthly;
+    private int stepsStartDaily;
+    private int stepsStartWeekly;
+
+    public UserClass(String name, double weight, double height ,String dateOfBirth,boolean gender,int setpsZero) {
+        this.userName = name;
         this.weight = weight;
         this.height = height;
-        this.dateOfBirth = dateOfBirth;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            this.dateOfBirth = dateFormat.parse(dateOfBirth);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+//        Log.d("date of birth",getDateOfBirthString()+" <> "+dateOfBirth);
+//        this.dateOfBirth = dateOfBirth;
         this.gender = gender;
+        this.stepsStartDaily=setpsZero;
+        this.stepsStartMonthly=setpsZero;
+        this.stepsStartWeekly=setpsZero;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public double getWeight() {
@@ -54,6 +63,9 @@ public class UserClass {
     public Date getDateOfBirth() {
         return dateOfBirth;
     }
+    public String getDateOfBirthString() {
+        return dateOfBirth.getDate()+"/"+(dateOfBirth.getMonth()+1)+"/"+dateOfBirth.getYear();
+    }
 
     public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
@@ -61,6 +73,30 @@ public class UserClass {
 
     public boolean isGender() {
         return gender;
+    }
+
+    public int getStepsStartMonthly() {
+        return stepsStartMonthly;
+    }
+
+    public void setStepsStartMonthly(int stepsStartMonthly) {
+        this.stepsStartMonthly = stepsStartMonthly;
+    }
+
+    public int getStepsStartDaily() {
+        return stepsStartDaily;
+    }
+
+    public void setStepsStartDaily(int stepsStartDaily) {
+        this.stepsStartDaily = stepsStartDaily;
+    }
+
+    public int getStepsStartWeekly() {
+        return stepsStartWeekly;
+    }
+
+    public void setStepsStartWeekly(int stepsStartWeekly) {
+        this.stepsStartWeekly = stepsStartWeekly;
     }
 
     public void setGender(boolean gender) {
@@ -84,12 +120,14 @@ public class UserClass {
             tempGender = "male";
         }
         return "UserClass{" +
-                "name='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+                "user name='" + userName + '\'' +
                 ", weight=" + weight +
                 ", height=" + height +
-                ", dateOfBirth=" + dateOfBirth +
+                ", dateOfBirth=" + getDateOfBirthString() +
                 ", gender=" + tempGender +
+                ", stepsStartWeekly=" + stepsStartWeekly +
+                ", stepsStartMonthly=" + stepsStartMonthly +
+                ", stepsStartDaily=" + stepsStartDaily +
                 '}';
     }
 }
