@@ -22,6 +22,10 @@ import android.widget.Toast;
 
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
     SensorManager sensorManager;
     TextView tvSteps,tvMaxSteps;
@@ -29,12 +33,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     Button btWorkout,btMonthly,btDaily,btWeekly,btAbout;
     CircularProgressBar circularProgressBar;
     int monthlyStepsMax = 310000,weeklyStepsMax=70000,dailyStepsMax=10000,currentSteps=0;
-    UserClass userClass=new UserClass("",0,0,"",false,0);
+    UserClass userClass;//=new UserClass("",0,0,"",false,0);
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        userClass = (UserClass) getIntent().getSerializableExtra("USER_CLASS");
+        Log.d("userClass",userClass.toString());
         tvSteps = (TextView) findViewById(R.id.tv_steps_taken);//link the textbox to java
         tvMaxSteps = (TextView) findViewById(R.id.tv_total_max);//link the textbox to java
         btWorkout = (Button) findViewById(R.id.workouts_bt);
@@ -44,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         btWeekly = (Button) findViewById(R.id.weekly_bt);
         btDaily = (Button) findViewById(R.id.daily_bt);
         DatabaseHandler databaseHandler = new DatabaseHandler(this);
-        userClass=databaseHandler.returnUserClassByUserId("1");
+//        userClass=databaseHandler.returnUserClassByUserId("1");
         btWorkout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,27 +93,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         btWeekly.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                btMonthly.setBackgroundColor(getResources().getColor(R.color.light_gray));
-//                btDaily.setBackgroundColor(getResources().getColor(R.color.light_gray));
-//                btWeekly.setBackgroundColor(getResources().getColor(R.color.dark_gray));
-//                setStepsCounter(weeklyStepsMax,userClass.getStepsStartWeekly());
-//                monthly=false;
-//                weekly=true;
-//                daily=false;
-
-//                UserClass userClass=new UserClass("assaf",67.0,185.0, "10-5-1999",true);
-//                userClass.getUserName();
-//                databaseHandler.createNewRowOfData("name u1","12345",1.73,21.3,"12/02/2001",false,currentSteps,currentSteps,currentSteps);
-
-//                Log.d("a",databaseHandler.returnUserPasswordfromUserId("2"));
-//                Log.d("a",databaseHandler.convertCursorToString(databaseHandler.findUserCursorfromUserId("2")));
-//                try {
-//                    databaseHandler.findUserCursorfromUserId("2");
-//
-//                } catch (ParseException e) {
-//                    e.printStackTrace();
-//                }
-
+                btMonthly.setBackgroundColor(getResources().getColor(R.color.light_gray));
+                btDaily.setBackgroundColor(getResources().getColor(R.color.light_gray));
+                btWeekly.setBackgroundColor(getResources().getColor(R.color.dark_gray));
+                setStepsCounter(weeklyStepsMax,userClass.getStepsStartWeekly());
+                monthly=false;
+                weekly=true;
+                daily=false;
             }
         });
 
@@ -144,6 +136,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = new Date();
+        if(userClass.getZeroDateOfDaily().after( date))
+            Log.d("date is later",date.toString());
     if(running){
         currentSteps = (int) event.values[0];
         if(weekly) {

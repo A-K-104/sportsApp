@@ -34,6 +34,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String COLUMN_HEIGHT="height";
     private static final String COLUMN_DATE_OF_BIRTH="date_of_birth";
     private static final String COLUMN_GENDER="gender";//male=true // female= false
+    private static final String COLUMN_ZERO_DATE_MONTHLY="zeroDateOfMonthly";
+    private static final String COLUMN_ZERO_DATE_DAILY="zeroDateOfDaily";
+    private static final String COLUMN_ZERO_DATE_WEEKLY="zeroDateOfWeekly";
+
 
     SQLiteDatabase database;
 
@@ -46,7 +50,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE "+TABLE_NAME+ " ( "+COLUMN_ID+" INTEGER PRIMARY KEY , "/*+COLUMN_NAME+" TEXT, "*/
                 +COLUMN_MONTHLY+" INTEGER, "+COLUMN_DAILY+" INTEGER, "+COLUMN_WEEKLY+" INTEGER, "+COLUMN_USER_NAME+" TEXT, "+COLUMN_USER_PASSWORD+" TEXT, "
-                +COLUMN_WEIGHT+" DOUBLE, "+COLUMN_HEIGHT+" DOUBLE, "+COLUMN_DATE_OF_BIRTH+" TEXT, "+COLUMN_GENDER+" BOOLEAN)");
+                +COLUMN_WEIGHT+" DOUBLE, "+COLUMN_HEIGHT+" DOUBLE, "+COLUMN_DATE_OF_BIRTH+" TEXT, "+COLUMN_GENDER+" BOOLEAN, "+COLUMN_ZERO_DATE_MONTHLY+" TEXT, "+COLUMN_ZERO_DATE_DAILY+" TEXT, "+COLUMN_ZERO_DATE_WEEKLY+" TEXT)");
     }
 
     @Override
@@ -55,7 +59,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
     //upload new data to db
-    public boolean createNewRowOfData(String userName,String userPassword,double weight,double height, String dateOfBirth,boolean gender,int stepsStartDaily,int stepsStartMonthly,int stepsStartWeekly) {
+    public boolean createNewRowOfData(String userName,String userPassword,double weight,double height, String dateOfBirth,boolean gender,
+                                      int stepsStartDaily,int stepsStartMonthly,int stepsStartWeekly, String zeroDateOfMonthly, String zeroDateOfDaily, String zeroDateOfWeekly) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         ContentValues contentValues = new ContentValues();
@@ -68,6 +73,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         contentValues.put(COLUMN_WEEKLY, stepsStartWeekly);
         contentValues.put(COLUMN_DAILY, stepsStartDaily);
         contentValues.put(COLUMN_MONTHLY, stepsStartMonthly);
+        contentValues.put(COLUMN_ZERO_DATE_MONTHLY, zeroDateOfMonthly);
+        contentValues.put(COLUMN_ZERO_DATE_DAILY, zeroDateOfDaily);
+        contentValues.put(COLUMN_ZERO_DATE_WEEKLY, zeroDateOfWeekly);
         long result = db.insert(TABLE_NAME, null, contentValues);
         //if date as inserted incorrectly it will return -1
         db.close();
@@ -105,22 +113,29 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return tableString;
     }
 
-    public Cursor findUserIdCursorfromUserName(String userName){
+    public String findUserIdCursorfromUserName(String userName){
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT " + COLUMN_ID + " FROM " + TABLE_NAME +
                 " WHERE " + COLUMN_USER_NAME + " = '" + userName + "'";
         Cursor data = db.rawQuery(query, null);
+        String output =convertCursorToString(data);
         db.close();
-        return data;
+        data.close();
+        if(output!="") {
+            return output.substring(4, 5);
+        }
+        return null;
     }
     public String returnUserPasswordfromUserId(String userId){
+
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT " + COLUMN_USER_PASSWORD + " FROM " + TABLE_NAME +
                 " WHERE " + COLUMN_ID + " = '" + userId + "'";
         Cursor data = db.rawQuery(query, null);
         String password = null;
-        if (data.moveToFirst()) // data?
-            password= data.getString(data.getColumnIndex("user_password"));
+        if (data.moveToFirst()) { // data?
+            password = data.getString(data.getColumnIndex("user_password"));
+        }
         data.close();
         db.close();
         return password;
@@ -132,28 +147,33 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 " WHERE " + COLUMN_ID + " = '" + userId + "'";
         Cursor data = db.rawQuery(query, null);
         String password = null;
-        if (data.moveToFirst()) // data?
-            password= data.getString(data.getColumnIndex("user_password"));
+        if (data.moveToFirst()) {// data?
+            password = data.getString(data.getColumnIndex("user_password"));
 //        String name, double weight, double height, Date dateOfBirth,boolean gender
-        boolean temp = false;
-        UserClass userClass;
-        if (data.getString(data.getColumnIndex(COLUMN_GENDER))=="1") {
-            temp = true;
-        }
+            boolean temp = false;
+            UserClass userClass;
+            if (data.getString(data.getColumnIndex(COLUMN_GENDER)) == "1") {
+                temp = true;
+            }
             userClass = new UserClass(
                     data.getString(data.getColumnIndex(COLUMN_USER_NAME)),
                     Double.parseDouble(data.getString(data.getColumnIndex(COLUMN_WEIGHT))),
                     Double.parseDouble(data.getString(data.getColumnIndex(COLUMN_HEIGHT))),
                     data.getString(data.getColumnIndex(COLUMN_DATE_OF_BIRTH)),
                     temp,
-                    0
+                    0,
+                    data.getString(data.getColumnIndex(COLUMN_ZERO_DATE_MONTHLY)),
+                    data.getString(data.getColumnIndex(COLUMN_ZERO_DATE_DAILY)),
+                    data.getString(data.getColumnIndex(COLUMN_ZERO_DATE_WEEKLY))
             );
             userClass.setStepsStartMonthly(Integer.parseInt(data.getString(1)));
-        userClass.setStepsStartDaily(Integer.parseInt(data.getString(2)));
-        userClass.setStepsStartWeekly(Integer.parseInt(data.getString(3)));
+            userClass.setStepsStartDaily(Integer.parseInt(data.getString(2)));
+            userClass.setStepsStartWeekly(Integer.parseInt(data.getString(3)));
             data.close();
             db.close();
             return userClass;
+        }
+        return  new UserClass("name",0,0,"1/1/1900",false,0,"1/1/1900","1/1/1900","1/1/1900");
     }
 
 //    public void updateName(String newName, int id, String oldName){
