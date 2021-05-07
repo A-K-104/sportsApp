@@ -23,8 +23,11 @@ import android.widget.Toast;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Calendar;
+
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
     SensorManager sensorManager;
@@ -33,14 +36,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     Button btWorkout,btMonthly,btDaily,btWeekly,btAbout;
     CircularProgressBar circularProgressBar;
     int monthlyStepsMax = 310000,weeklyStepsMax=70000,dailyStepsMax=10000,currentSteps=0;
-    UserClass userClass;//=new UserClass("",0,0,"",false,0);
+    DatabaseHandler databaseHandler;
+    UserClass userClass;
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         userClass = (UserClass) getIntent().getSerializableExtra("USER_CLASS");
-        Log.d("userClass",userClass.toString());
         tvSteps = (TextView) findViewById(R.id.tv_steps_taken);//link the textbox to java
         tvMaxSteps = (TextView) findViewById(R.id.tv_total_max);//link the textbox to java
         btWorkout = (Button) findViewById(R.id.workouts_bt);
@@ -49,8 +52,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         btMonthly = (Button) findViewById(R.id.monthly_bt);
         btWeekly = (Button) findViewById(R.id.weekly_bt);
         btDaily = (Button) findViewById(R.id.daily_bt);
-        DatabaseHandler databaseHandler = new DatabaseHandler(this);
-//        userClass=databaseHandler.returnUserClassByUserId("1");
+        databaseHandler = new DatabaseHandler(this);
         btWorkout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -136,10 +138,29 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        Date date = new Date();
-        if(userClass.getZeroDateOfDaily().after( date))
-            Log.d("date is later",date.toString());
+
+        SimpleDateFormat df1 = new SimpleDateFormat("dd/MM/yyyy");
+        String date1 = df1.format(Calendar.getInstance().getTime());
+        DateClass date = new DateClass(date1);
+        if(userClass.getZeroDateOfDaily().after( date)) {
+            Log.d("MainActivity","your zero day of the day count was restart");
+            userClass.setZeroDateOfDaily(date.getDay() + "/" + date.getMonth() + "/" + date.getYear());
+            userClass.setStepsStartDaily((int)event.values[0]);
+            databaseHandler.updateUserClass(databaseHandler.findUserIdCursorfromUserName(userClass.getUserName()),userClass);
+        }
+        if(userClass.getZeroDateOfWeekly().afterDay( date,7)) {
+            Log.d("MainActivity","your zero day of the week was count restart");
+            userClass.setZeroDateOfWeekly(date.getDay() + "/" + date.getMonth() + "/" + date.getYear());
+            userClass.setStepsStartWeekly((int)event.values[0]);
+            databaseHandler.updateUserClass(databaseHandler.findUserIdCursorfromUserName(userClass.getUserName()),userClass);
+        }
+        if(userClass.getZeroDateOfMonthly().afterMonth( date,1)) {
+            Log.d("MainActivity","your zero day of the month was count restart");
+            userClass.setZeroDateOfMonthly(date.getDay() + "/" + date.getMonth() + "/" + date.getYear());
+            userClass.setStepsStartMonthly((int)event.values[0]);
+            databaseHandler.updateUserClass(databaseHandler.findUserIdCursorfromUserName(userClass.getUserName()),userClass);
+        }
+
     if(running){
         currentSteps = (int) event.values[0];
         if(weekly) {

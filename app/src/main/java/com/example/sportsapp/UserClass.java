@@ -1,45 +1,40 @@
 package com.example.sportsapp;
 
+import android.content.Intent;
 import android.util.Log;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
 
 public class UserClass implements Serializable {
 
     private String userName;
     private double weight;
     private double height;
-    private Date dateOfBirth;
+    private DateClass dateOfBirth;
     private boolean gender;//male=true // female= false
     private int stepsStartMonthly;
     private int stepsStartDaily;
     private int stepsStartWeekly;
-    private Date zeroDateOfMonthly;
-    private Date zeroDateOfDaily;
-    private Date zeroDateOfWeekly;
+    private DateClass zeroDateOfMonthly;
+    private DateClass zeroDateOfDaily;
+    private DateClass zeroDateOfWeekly;
 
-    public UserClass(String name, double weight, double height ,String dateOfBirth,boolean gender,int setpsZero,String zeroDateOfMonthly,String zeroDateOfDaily,String zeroDateOfWeekly) {
+    public UserClass(String name, double weight, double height ,String dateOfBirth,boolean gender,int stepsStartDaily,int stepsStartMonthly,int stepsStartWeekly,String zeroDateOfMonthly,String zeroDateOfDaily,String zeroDateOfWeekly) {
         this.userName = name;
         this.weight = weight;
         this.height = height;
-        this.dateOfBirth= returnsDateFromString(dateOfBirth);
-        this.zeroDateOfMonthly= returnsDateFromString(zeroDateOfMonthly);
-        this.zeroDateOfDaily= returnsDateFromString(zeroDateOfDaily);
-        this.zeroDateOfWeekly= returnsDateFromString(zeroDateOfWeekly);
+        this.dateOfBirth= new DateClass(dateOfBirth);
+        this.zeroDateOfMonthly=new DateClass(zeroDateOfMonthly);
+        this.zeroDateOfDaily=new DateClass(zeroDateOfDaily);
+        this.zeroDateOfWeekly=new DateClass(zeroDateOfWeekly);
         this.gender = gender;
-        this.stepsStartDaily=setpsZero;
-        this.stepsStartMonthly=setpsZero;
-        this.stepsStartWeekly=setpsZero;
+        this.stepsStartDaily=stepsStartDaily;
+        this.stepsStartMonthly=stepsStartMonthly;
+        this.stepsStartWeekly=stepsStartWeekly;
     }
-    private Date returnsDateFromString(String stringDate){
-        if(stringDate.length()==10)
-        return new Date(Integer.parseInt(stringDate.substring(6,10)),Integer.parseInt(stringDate.substring(3,5))-1,Integer.parseInt(stringDate.substring(0,2)));
-    return new Date(1900,1,1);
-    }
+
     public String getUserName() {
         return userName;
     }
@@ -64,21 +59,22 @@ public class UserClass implements Serializable {
         this.height = height;
     }
 
-    public Date getDateOfBirth() {
+    public DateClass getDateOfBirth() {
         return dateOfBirth;
-    }
-    public String getDateOfBirthString() {
-        return dateOfBirth.getDate()+"/"+(dateOfBirth.getMonth()+1)+"/"+dateOfBirth.getYear();
     }
 
     public void setDateOfBirth(String dateOfBirth) {
-        this.dateOfBirth = returnsDateFromString(dateOfBirth);
+        this.dateOfBirth = new DateClass(dateOfBirth);
     }
 
+    public int getGender() {
+        if(gender)
+        return 1;
+        return 0;
+    }
     public boolean isGender() {
         return gender;
     }
-
     public int getStepsStartMonthly() {
         return stepsStartMonthly;
     }
@@ -107,37 +103,35 @@ public class UserClass implements Serializable {
         this.gender = gender;
     }
 
-    public String getBmiString(){
-        DecimalFormat precision = new DecimalFormat("0.00");
-        return precision.format(getBmiDouble());
-    }
-
     public double getBmiDouble(){
         return  this.weight/Math.pow((this.height/100),2);
     }
 
-    public Date getZeroDateOfMonthly() {
+    public DateClass getZeroDateOfMonthly() {
         return zeroDateOfMonthly;
     }
-
+    public void setZeroDateOfMonthlyString(String zeroDateOfMonthly) {
+        this.zeroDateOfMonthly = new DateClass(zeroDateOfMonthly);
+    }
     public void setZeroDateOfMonthly(String zeroDateOfMonthly) {
-        this.zeroDateOfMonthly = returnsDateFromString(zeroDateOfMonthly);
+        this.zeroDateOfMonthly = new DateClass(zeroDateOfMonthly);
     }
 
-    public Date getZeroDateOfDaily() {
+
+    public DateClass getZeroDateOfDaily() {
         return zeroDateOfDaily;
     }
 
     public void setZeroDateOfDaily(String zeroDateOfDaily) {
-        this.zeroDateOfDaily = returnsDateFromString(zeroDateOfDaily);
+        this.zeroDateOfDaily = new DateClass(zeroDateOfDaily);
     }
 
-    public Date getZeroDateOfWeekly() {
+    public DateClass getZeroDateOfWeekly() {
         return zeroDateOfWeekly;
     }
 
     public void setZeroDateOfWeekly(String zeroDateOfWeekly) {
-        this.zeroDateOfWeekly = returnsDateFromString(zeroDateOfWeekly);
+        this.zeroDateOfWeekly = new DateClass(zeroDateOfWeekly);
     }
 
     @Override
@@ -151,11 +145,14 @@ public class UserClass implements Serializable {
                 "user name='" + userName + '\'' +
                 ", weight=" + weight +
                 ", height=" + height +
-                ", dateOfBirth=" + getDateOfBirthString() +
+                ", dateOfBirth=" + dateOfBirth.getDate() +
                 ", gender=" + tempGender +
                 ", stepsStartWeekly=" + stepsStartWeekly +
                 ", stepsStartMonthly=" + stepsStartMonthly +
                 ", stepsStartDaily=" + stepsStartDaily +
+                ", zeroDateOfMonthly=" + zeroDateOfMonthly.getDate() +
+                ", zeroDateOfDaily=" + zeroDateOfDaily.getDate() +
+                ", zeroDateOfWeekly=" + zeroDateOfWeekly.getDate() +
                 '}';
     }
 }

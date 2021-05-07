@@ -17,6 +17,7 @@ public class LogInActivity extends AppCompatActivity {
     Button btLogIn,btRegister;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +27,7 @@ public class LogInActivity extends AppCompatActivity {
         tvUserName= (TextView) findViewById(R.id.tv_user_name);
         btLogIn= (Button) findViewById(R.id.bt_login);
         btRegister= (Button) findViewById(R.id.bt_register);
+
 //        databaseHandler.createNewRowOfData("name2","23456",1.73,21.3,"12/02/2001",false,0,0,0);
         btLogIn.setOnClickListener(new View.OnClickListener() {
             @Override

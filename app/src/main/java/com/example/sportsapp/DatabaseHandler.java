@@ -24,7 +24,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_NAME = "userdata";
 
     private static final String COLUMN_ID = "id";
-//    private static final String COLUMN_NAME = "user_name";
     private static final String COLUMN_MONTHLY="steps_start_monthly";
     private static final String COLUMN_DAILY="steps_start_daily";
     private static final String COLUMN_WEEKLY="steps_start_weekly";
@@ -59,23 +58,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
     //upload new data to db
-    public boolean createNewRowOfData(String userName,String userPassword,double weight,double height, String dateOfBirth,boolean gender,
-                                      int stepsStartDaily,int stepsStartMonthly,int stepsStartWeekly, String zeroDateOfMonthly, String zeroDateOfDaily, String zeroDateOfWeekly) {
+    public boolean createNewRowOfData(UserClass userClass,String userPassword) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_USER_NAME, userName);
+        contentValues.put(COLUMN_USER_NAME, userClass.getUserName());
         contentValues.put(COLUMN_USER_PASSWORD, userPassword);
-        contentValues.put(COLUMN_WEIGHT, weight);
-        contentValues.put(COLUMN_HEIGHT, height);
-        contentValues.put(COLUMN_DATE_OF_BIRTH, dateOfBirth);
-        contentValues.put(COLUMN_GENDER, gender);
-        contentValues.put(COLUMN_WEEKLY, stepsStartWeekly);
-        contentValues.put(COLUMN_DAILY, stepsStartDaily);
-        contentValues.put(COLUMN_MONTHLY, stepsStartMonthly);
-        contentValues.put(COLUMN_ZERO_DATE_MONTHLY, zeroDateOfMonthly);
-        contentValues.put(COLUMN_ZERO_DATE_DAILY, zeroDateOfDaily);
-        contentValues.put(COLUMN_ZERO_DATE_WEEKLY, zeroDateOfWeekly);
+        contentValues.put(COLUMN_WEIGHT, userClass.getWeight());
+        contentValues.put(COLUMN_HEIGHT, userClass.getWeight());
+        contentValues.put(COLUMN_DATE_OF_BIRTH, userClass.getDateOfBirth().getDate());
+        contentValues.put(COLUMN_GENDER, userClass.getDateOfBirth().getDate());
+        contentValues.put(COLUMN_WEEKLY, userClass.getStepsStartWeekly());
+        contentValues.put(COLUMN_DAILY, userClass.getStepsStartDaily());
+        contentValues.put(COLUMN_MONTHLY, userClass.getStepsStartMonthly());
+        contentValues.put(COLUMN_ZERO_DATE_MONTHLY, userClass.getZeroDateOfMonthly().getDate());
+        contentValues.put(COLUMN_ZERO_DATE_DAILY, userClass.getZeroDateOfDaily().getDate());
+        contentValues.put(COLUMN_ZERO_DATE_WEEKLY, userClass.getZeroDateOfWeekly().getDate());
         long result = db.insert(TABLE_NAME, null, contentValues);
         //if date as inserted incorrectly it will return -1
         db.close();
@@ -161,30 +159,40 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     Double.parseDouble(data.getString(data.getColumnIndex(COLUMN_HEIGHT))),
                     data.getString(data.getColumnIndex(COLUMN_DATE_OF_BIRTH)),
                     temp,
-                    0,
+                    Integer.parseInt(data.getString(data.getColumnIndex(COLUMN_DAILY))),
+                    Integer.parseInt(data.getString(data.getColumnIndex(COLUMN_MONTHLY))),
+                    Integer.parseInt(data.getString(data.getColumnIndex(COLUMN_WEEKLY))),
                     data.getString(data.getColumnIndex(COLUMN_ZERO_DATE_MONTHLY)),
                     data.getString(data.getColumnIndex(COLUMN_ZERO_DATE_DAILY)),
                     data.getString(data.getColumnIndex(COLUMN_ZERO_DATE_WEEKLY))
             );
-            userClass.setStepsStartMonthly(Integer.parseInt(data.getString(1)));
-            userClass.setStepsStartDaily(Integer.parseInt(data.getString(2)));
-            userClass.setStepsStartWeekly(Integer.parseInt(data.getString(3)));
+//            userClass.setStepsStartMonthly(Integer.parseInt(data.getString(1)));
+//            userClass.setStepsStartDaily(Integer.parseInt(data.getString(2)));
+//            userClass.setStepsStartWeekly(Integer.parseInt(data.getString(3)));
             data.close();
             db.close();
             return userClass;
         }
-        return  new UserClass("name",0,0,"1/1/1900",false,0,"1/1/1900","1/1/1900","1/1/1900");
+        return  new UserClass("name",0,0,"1/1/1900",false,0,0,0,"1/1/1900","1/1/1900","1/1/1900");
     }
 
-//    public void updateName(String newName, int id, String oldName){
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        String query = "UPDATE " + TABLE_NAME + " SET " + COLUMN_NAME +
-//                " = '" + newName + "' WHERE " + COLUMN_ID + " = '" + id + "'" +
-//                " AND " + COLUMN_NAME + " = '" + oldName + "'";
-//        Log.d(TAG, "updateName: query: " + query);
-//        Log.d(TAG, "updateName: Setting name to " + newName);
-//        db.execSQL(query);
-//    }
+
+    public void updateUserClass( String id, UserClass userClass){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + TABLE_NAME + " SET " +
+                COLUMN_USER_NAME+" = '" + userClass.getUserName()+"' , "+
+                COLUMN_WEIGHT +" = '" + userClass.getWeight()+"' , "+
+                COLUMN_HEIGHT +" = '" + userClass.getHeight()+"' , "+
+                COLUMN_DATE_OF_BIRTH+" = '" + userClass.getDateOfBirth().getDate()+"' , "+
+                COLUMN_GENDER+" = '" + userClass.getGender()+"' , "+
+                COLUMN_WEEKLY+" = '" +userClass.getStepsStartWeekly()+"' , "+
+                COLUMN_DAILY+" = '" +userClass.getStepsStartDaily()+"' , "+
+                COLUMN_MONTHLY+" = '" + userClass.getStepsStartMonthly()+"' , "+
+                COLUMN_ZERO_DATE_MONTHLY+" = '" + userClass.getZeroDateOfMonthly().getDate()+"' , "+
+                COLUMN_ZERO_DATE_DAILY+" = '" +userClass.getZeroDateOfDaily().getDate()+"' , "+
+                COLUMN_ZERO_DATE_WEEKLY+" = '" +userClass.getZeroDateOfWeekly().getDate()+ "' WHERE " + COLUMN_ID + " = '" + id + "'";
+        db.execSQL(query);
+    }
 //
 //    /**
 //     * Delete from database
