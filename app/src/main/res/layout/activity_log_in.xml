@@ -6,69 +6,63 @@
     android:layout_height="match_parent"
     tools:context=".LogInActivity">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height = "match_parent"
-        tools:context = ".MainActivity">
-
-        <TextView android:text = "Login" android:layout_width="wrap_content"
-            android:layout_height = "wrap_content"
-            android:id = "@+id/textview"
-            android:textSize = "35dp"
-            android:layout_alignParentTop = "true"
-            android:layout_centerHorizontal = "true" />
-
+    <LinearLayout
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/tv_update_head_line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="Login"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            android:layout_gravity="center"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="80dp"
+            android:text="Enter User Name"/>
 
         <EditText
             android:id="@+id/tv_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/imageView"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="46dp"
-            android:focusable="true"
-            android:hint="Enter User Name"
-            android:text="name1"
-            android:textColorHighlight="#ff7eff15"
-            android:textColorHint="#ffff25e6" />
-
+            android:layout_marginLeft="100dp"
+            android:ems="10"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="40dp"
+            android:text="Enter Password"/>
 
         <EditText
             android:id="@+id/tv_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_user_name"
-            android:layout_alignEnd="@+id/tv_user_name"
-            android:layout_alignRight="@+id/tv_user_name"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:ems="10"
-            android:hint="Password"
+            android:layout_marginLeft="100dp"
             android:inputType="textPassword"
-            android:text="12345"
-            android:textColorHint="#ffff299f" />
-
+            android:ems="10"/>
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="login"
             android:id="@+id/bt_login"
-            android:layout_alignParentBottom="true"
-            android:layout_toLeftOf="@+id/textview"
-            android:layout_toStartOf="@+id/textview" />
-
-        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Register"
+            android:layout_marginLeft="160dp"
+            android:layout_marginTop="110dp"
+            android:text="login" />
+        <TextView
             android:id="@+id/bt_register"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@+id/textview"
-            android:layout_toEndOf="@+id/textview" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="You are not Registered? Register here"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:textColor="#3F51B5"/>
 
-    </RelativeLayout>
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

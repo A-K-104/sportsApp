@@ -14,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class RegisterActivity extends AppCompatActivity {
-TextView userNameTv,weightTv,heightTv,passwordTv;
+TextView userNameTv,weightTv,heightTv,passwordTv,loginTv;
 DatePicker dateOfbirthDP;
 Button registerBt;
 Switch genderSwitch;
@@ -35,6 +35,7 @@ Switch genderSwitch;
         tvUserNameText= (TextView) findViewById(R.id.fstTxt);
         tvWeightText= (TextView) findViewById(R.id.secTxt);
         tvHeightText= (TextView) findViewById(R.id.thirdTxt);
+        loginTv= (TextView) findViewById(R.id.tv_login);
         registerBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,7 +52,6 @@ Switch genderSwitch;
                     databaseHandler.createNewRowOfData(userClass,String.valueOf(passwordTv.getText()));
                     Intent intent = new Intent(RegisterActivity.this,MainActivity.class);
                     intent.putExtra("USER_CLASS", userClass);
-                    Log.d("userClass", userClass.toString() + "****" + dateOfbirthDP.getDayOfMonth() + "/" + dateOfbirthDP.getMonth() + "/" + dateOfbirthDP.getYear());
                     startActivity(intent);
 
                 } else {
@@ -90,6 +90,12 @@ Switch genderSwitch;
                     }
 
                 }
+            }
+        });
+        loginTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }

@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,8 +12,8 @@ import android.widget.Toast;
 
 public class LogInActivity extends AppCompatActivity {
 
-    TextView tvPassword,tvUserName;
-    Button btLogIn,btRegister;
+    TextView tvPassword,tvUserName, tvRegister;
+    Button btLogIn;
 
 
 
@@ -26,7 +25,7 @@ public class LogInActivity extends AppCompatActivity {
         tvPassword= (TextView) findViewById(R.id.tv_password);
         tvUserName= (TextView) findViewById(R.id.tv_user_name);
         btLogIn= (Button) findViewById(R.id.bt_login);
-        btRegister= (Button) findViewById(R.id.bt_register);
+        tvRegister = (TextView) findViewById(R.id.bt_register);
 
 //        databaseHandler.createNewRowOfData("name2","23456",1.73,21.3,"12/02/2001",false,0,0,0);
         btLogIn.setOnClickListener(new View.OnClickListener() {
@@ -55,7 +54,7 @@ public class LogInActivity extends AppCompatActivity {
                 }
             }
         });
-        btRegister.setOnClickListener(new View.OnClickListener() {
+        tvRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LogInActivity.this,RegisterActivity.class);

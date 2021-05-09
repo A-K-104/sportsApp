@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     SensorManager sensorManager;
     TextView tvSteps,tvMaxSteps;
     boolean running= false,weekly=false,daily = true, monthly=false;
-    Button btWorkout,btMonthly,btDaily,btWeekly,btAbout;
+    Button btWorkout,btMonthly,btDaily,btWeekly,btAbout,btUpdate;
     CircularProgressBar circularProgressBar;
     int monthlyStepsMax = 310000,weeklyStepsMax=70000,dailyStepsMax=10000,currentSteps=0;
     DatabaseHandler databaseHandler;
@@ -52,7 +52,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         btMonthly = (Button) findViewById(R.id.monthly_bt);
         btWeekly = (Button) findViewById(R.id.weekly_bt);
         btDaily = (Button) findViewById(R.id.daily_bt);
+        btUpdate = (Button) findViewById(R.id.update_bt);
         databaseHandler = new DatabaseHandler(this);
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_DENIED){//check if there is permission for step sensor
+            //ask for permission
+            requestPermissions(new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, 0);
+        }
         btWorkout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,9 +77,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
             @Override
             public void onClick(View v) {//"@color/dark_gray"));
-                btMonthly.setBackgroundColor(getResources().getColor(R.color.dark_gray));
-                btDaily.setBackgroundColor(getResources().getColor(R.color.light_gray));
-                btWeekly.setBackgroundColor(getResources().getColor(R.color.light_gray));
+//                btMonthly.setBackgroundColor(getResources().getColor(R.color.dark_gray));
+//                btDaily.setBackgroundColor(getResources().getColor(R.color.light_gray));
+//                btWeekly.setBackgroundColor(getResources().getColor(R.color.light_gray));
+                btMonthly.setBackgroundTintList(btMonthly.getResources().getColorStateList(R.color.dark_gray));
+                btDaily.setBackgroundTintList(btDaily.getResources().getColorStateList(R.color.light_gray));
+                btWeekly.setBackgroundTintList(btWeekly.getResources().getColorStateList(R.color.light_gray));
                 setStepsCounter(monthlyStepsMax,userClass.getStepsStartMonthly());
                 monthly=true;
                 weekly=false;
@@ -83,9 +92,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         btDaily.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {//"@color/dark_gray"));
-                btMonthly.setBackgroundColor(getResources().getColor(R.color.light_gray));
-                btDaily.setBackgroundColor(getResources().getColor(R.color.dark_gray));
-                btWeekly.setBackgroundColor(getResources().getColor(R.color.light_gray));
+                btMonthly.setBackgroundTintList(btMonthly.getResources().getColorStateList(R.color.light_gray));
+                btDaily.setBackgroundTintList(btDaily.getResources().getColorStateList(R.color.dark_gray));
+                btWeekly.setBackgroundTintList(btWeekly.getResources().getColorStateList(R.color.light_gray));
+//                btMonthly.setBackgroundColor(getResources().getColor(R.color.light_gray));
+//                btDaily.setBackgroundColor(getResources().getColor(R.color.dark_gray));
+//                btWeekly.setBackgroundColor(getResources().getColor(R.color.light_gray));
                 setStepsCounter(dailyStepsMax,userClass.getStepsStartDaily());
                 monthly=false;
                 weekly=false;
@@ -95,25 +107,27 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         btWeekly.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                btMonthly.setBackgroundColor(getResources().getColor(R.color.light_gray));
-                btDaily.setBackgroundColor(getResources().getColor(R.color.light_gray));
-                btWeekly.setBackgroundColor(getResources().getColor(R.color.dark_gray));
+//                btMonthly.setBackgroundColor(getResources().getColor(R.color.light_gray));
+//                btDaily.setBackgroundColor(getResources().getColor(R.color.light_gray));
+//                btWeekly.setBackgroundColor(getResources().getColor(R.color.dark_gray));
+                btMonthly.setBackgroundTintList(btMonthly.getResources().getColorStateList(R.color.light_gray));
+                btDaily.setBackgroundTintList(btDaily.getResources().getColorStateList(R.color.light_gray));
+                btWeekly.setBackgroundTintList(btWeekly.getResources().getColorStateList(R.color.dark_gray));
                 setStepsCounter(weeklyStepsMax,userClass.getStepsStartWeekly());
                 monthly=false;
                 weekly=true;
                 daily=false;
             }
         });
-
-
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_DENIED){//check if there is permission for step sensor
-            //ask for permission
-            requestPermissions(new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, 0);
-        }
-//        else {//start the sensor
-            sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-//        }
-        }
+        btUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,UpdateUserActivity.class);
+                intent.putExtra("USER_CLASS",userClass);
+                startActivity(intent);
+            }
+        });
+    }
 
 
     @Override
