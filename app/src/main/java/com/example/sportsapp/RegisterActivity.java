@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -15,9 +14,9 @@ import android.widget.Toast;
 
 public class RegisterActivity extends AppCompatActivity {
 TextView userNameTv,weightTv,heightTv,passwordTv,loginTv;
-DatePicker dateOfbirthDP;
+DatePicker dateOfBirthDP;
 Button registerBt;
-Switch genderSwitch;
+Switch genderSw;
     TextView tvPasswordText,tvUserNameText,tvWeightText,tvHeightText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,25 +27,46 @@ Switch genderSwitch;
         weightTv = (TextView) findViewById(R.id.txtWeight);
         heightTv = (TextView) findViewById(R.id.txtHeight);
         passwordTv = (TextView) findViewById(R.id.txtPwd);
-        dateOfbirthDP = (DatePicker) findViewById(R.id.date_picker);
+        dateOfBirthDP = (DatePicker) findViewById(R.id.date_picker);
         registerBt = (Button) findViewById(R.id.bt_resistor);
-        genderSwitch = (Switch) findViewById(R.id.genderSw);
+        genderSw = (Switch) findViewById(R.id.genderSw);
         tvPasswordText= (TextView) findViewById(R.id.sixTxt);
         tvUserNameText= (TextView) findViewById(R.id.fstTxt);
         tvWeightText= (TextView) findViewById(R.id.secTxt);
         tvHeightText= (TextView) findViewById(R.id.thirdTxt);
         loginTv= (TextView) findViewById(R.id.tv_login);
+        /**
+         * button that returns us to the previous activity
+         */
+        loginTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        /**
+         * register button
+         * it is testing the values of input if ok will save the values and move activity
+         * else will show message and mak in red the issue
+         */
         registerBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if ((!String.valueOf(userNameTv.getText()).equals("")) && ((String.valueOf(passwordTv.getText()).length() >5)) &&
-                        (databaseHandler.findUserIdCursorfromUserName(String.valueOf(userNameTv.getText())) == null)
-                        && (parseIntOrNull(String.valueOf(weightTv.getText())) != null) && (parseIntOrNull(String.valueOf(heightTv.getText())) != null)) {
-                    parseIntOrNull(String.valueOf(heightTv.getText()));
+                if ((!String.valueOf(userNameTv.getText()).equals("")) && //if the user name isn't empty
+                        ((String.valueOf(passwordTv.getText()).length() >5)) &&//if the password is longer then 5
+                        (databaseHandler.returnUserIdByUserName(String.valueOf(userNameTv.getText())) == null) &&//if the userName isn't already in use
+                        (parseIntOrNull(String.valueOf(weightTv.getText())) != null) &&//if the weight value is int
+                        (parseIntOrNull(String.valueOf(heightTv.getText())) != null)) {//if the height value is int
+                    /**
+                     * create the new User from the data in textBox's
+                     * userName, weight, height, dateOfBirth, gender (as bool), zero point of counting steps
+                     * then we upload the data to db
+                     * and last it will start new activity
+                     */
                     UserClass userClass = new UserClass(String.valueOf(userNameTv.getText()), Double.parseDouble(String.valueOf(weightTv.getText()))
                             , Double.parseDouble(String.valueOf(heightTv.getText())),
-                            dateOfbirthDP.getDayOfMonth() + "/" + dateOfbirthDP.getMonth() + "/" + dateOfbirthDP.getYear(),
-                            genderSwitch.isChecked(),
+                            dateOfBirthDP.getDayOfMonth() + "/" + dateOfBirthDP.getMonth() + "/" + dateOfBirthDP.getYear(),
+                            genderSw.isChecked(),
                             0,0,0, "1/1/1900", "1/1/1900", "1/1/1900"//presetOfSteps
                     );
                     databaseHandler.createNewRowOfData(userClass,String.valueOf(passwordTv.getText()));
@@ -55,6 +75,10 @@ Switch genderSwitch;
                     startActivity(intent);
 
                 } else {
+                    /**
+                     * first we rest all text to black
+                     * then we are retesting all data by itself and then mark the wrong one
+                     */
                     userNameTv.setTextColor(Color.BLACK);
                     tvUserNameText.setTextColor(Color.BLACK);
                     passwordTv.setTextColor(Color.BLACK);
@@ -73,7 +97,7 @@ Switch genderSwitch;
                         tvPasswordText.setTextColor(Color.RED);
                         Toast.makeText(RegisterActivity.this, "Failed to register, password to short at list 6 letters", Toast.LENGTH_SHORT).show();
                     }
-                    if (databaseHandler.findUserIdCursorfromUserName(String.valueOf(userNameTv.getText())) != null) {
+                    if (databaseHandler.returnUserIdByUserName(String.valueOf(userNameTv.getText())) != null) {
                         userNameTv.setTextColor(Color.RED);
                         tvUserNameText.setTextColor(Color.RED);
                         Toast.makeText(RegisterActivity.this, "Failed to register, user name already in use", Toast.LENGTH_SHORT).show();
@@ -92,13 +116,13 @@ Switch genderSwitch;
                 }
             }
         });
-        loginTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
     }
+
+    /**
+     * this function test if a string value is parsable
+     * @param value the string that you want to test
+     * @return if it parsable it will return the number else null
+     */
     public Double parseIntOrNull(String value) {
         try {
             return Double.parseDouble(value);

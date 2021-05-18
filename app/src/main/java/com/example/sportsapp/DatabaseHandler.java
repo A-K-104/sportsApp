@@ -17,25 +17,24 @@ import java.util.Locale;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION=1;
+    private static final int DATABASE_VERSION=1;//version of db
 
-    private static final String DATABASE_NAME = "test.db";
-    private static final String TAG = "DatabaseHelper";
+    private static final String DATABASE_NAME = "test.db";//name of db
+    private static final String TAG = "DatabaseHelper";//tag of db for the logs
     private static final String TABLE_NAME = "userdata";
-
-    private static final String COLUMN_ID = "id";
-    private static final String COLUMN_MONTHLY="steps_start_monthly";
-    private static final String COLUMN_DAILY="steps_start_daily";
-    private static final String COLUMN_WEEKLY="steps_start_weekly";
+    private static final String COLUMN_ID = "id";//id  of line of db
+    private static final String COLUMN_MONTHLY="steps_start_monthly";//the number of zero steps in month
+    private static final String COLUMN_DAILY="steps_start_daily";//the number of zero steps in day
+    private static final String COLUMN_WEEKLY="steps_start_weekly";//the number of zero steps in week
     private static final String COLUMN_USER_NAME="user_name";
     private static final String COLUMN_USER_PASSWORD="user_password";
     private static final String COLUMN_WEIGHT="weight";
     private static final String COLUMN_HEIGHT="height";
     private static final String COLUMN_DATE_OF_BIRTH="date_of_birth";
     private static final String COLUMN_GENDER="gender";//male=true // female= false
-    private static final String COLUMN_ZERO_DATE_MONTHLY="zeroDateOfMonthly";
-    private static final String COLUMN_ZERO_DATE_DAILY="zeroDateOfDaily";
-    private static final String COLUMN_ZERO_DATE_WEEKLY="zeroDateOfWeekly";
+    private static final String COLUMN_ZERO_DATE_MONTHLY="zeroDateOfMonthly";//the date that we started to count month steps
+    private static final String COLUMN_ZERO_DATE_DAILY="zeroDateOfDaily";//the date that we started to count day steps
+    private static final String COLUMN_ZERO_DATE_WEEKLY="zeroDateOfWeekly";//the date that we started to count week steps
 
 
     SQLiteDatabase database;
@@ -47,7 +46,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE "+TABLE_NAME+ " ( "+COLUMN_ID+" INTEGER PRIMARY KEY , "/*+COLUMN_NAME+" TEXT, "*/
+        db.execSQL("CREATE TABLE "+TABLE_NAME+ " ( "+COLUMN_ID+" INTEGER PRIMARY KEY , "
                 +COLUMN_MONTHLY+" INTEGER, "+COLUMN_DAILY+" INTEGER, "+COLUMN_WEEKLY+" INTEGER, "+COLUMN_USER_NAME+" TEXT, "+COLUMN_USER_PASSWORD+" TEXT, "
                 +COLUMN_WEIGHT+" DOUBLE, "+COLUMN_HEIGHT+" DOUBLE, "+COLUMN_DATE_OF_BIRTH+" TEXT, "+COLUMN_GENDER+" BOOLEAN, "+COLUMN_ZERO_DATE_MONTHLY+" TEXT, "+COLUMN_ZERO_DATE_DAILY+" TEXT, "+COLUMN_ZERO_DATE_WEEKLY+" TEXT)");
     }
@@ -57,7 +56,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME);
         onCreate(db);
     }
-    //upload new data to db
+    //upload new data row to db
     public boolean createNewRowOfData(UserClass userClass,String userPassword) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -87,7 +86,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 
-//      Returns all the data from database
+//      Returns all the data table from database
     public Cursor getDataBase(){
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_NAME;
@@ -95,7 +94,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return data;
 
     }
-    public String convertCursorToString (Cursor cursor){
+    public String convertCursorToString (Cursor cursor){//converting pointer of row to string of data
         String tableString="";
         if (cursor.moveToFirst() ){
             String[] columnNames = cursor.getColumnNames();
@@ -111,7 +110,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return tableString;
     }
 
-    public String findUserIdCursorfromUserName(String userName){
+    public String returnUserIdByUserName(String userName){//gets username and finds it's id
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT " + COLUMN_ID + " FROM " + TABLE_NAME +
                 " WHERE " + COLUMN_USER_NAME + " = '" + userName + "'";
@@ -122,16 +121,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if(output!="") {
             return output.substring(4, 5);
         }
-        return null;
+        return null;//in case he didn't find one
     }
-    public String returnUserPasswordfromUserId(String userId){
+    public String returnUserPasswordFromUserId(String userId){//returns password from user id
 
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT " + COLUMN_USER_PASSWORD + " FROM " + TABLE_NAME +
                 " WHERE " + COLUMN_ID + " = '" + userId + "'";
         Cursor data = db.rawQuery(query, null);
         String password = null;
-        if (data.moveToFirst()) { // data?
+        if (data.moveToFirst()) { // check if he finds data in case not it will return null
             password = data.getString(data.getColumnIndex("user_password"));
         }
         data.close();
@@ -139,18 +138,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return password;
     }
 
-    public UserClass returnUserClassByUserId(String userId)  {
+    public UserClass returnUserClassByUserId(String userId)  {//returns user by id
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT *" +  " FROM " + TABLE_NAME +
                 " WHERE " + COLUMN_ID + " = '" + userId + "'";
         Cursor data = db.rawQuery(query, null);
         String password = null;
-        if (data.moveToFirst()) {// data?
+        if (data.moveToFirst()) {// check if he finds data in case not it will return null
             password = data.getString(data.getColumnIndex("user_password"));
-//        String name, double weight, double height, Date dateOfBirth,boolean gender
             boolean temp = false;
             UserClass userClass;
-            if (data.getString(data.getColumnIndex(COLUMN_GENDER)) == "1") {
+            if (data.getString(data.getColumnIndex(COLUMN_GENDER)) == "1") {//converting 1/0 to boolean
                 temp = true;
             }
             userClass = new UserClass(
@@ -166,18 +164,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     data.getString(data.getColumnIndex(COLUMN_ZERO_DATE_DAILY)),
                     data.getString(data.getColumnIndex(COLUMN_ZERO_DATE_WEEKLY))
             );
-//            userClass.setStepsStartMonthly(Integer.parseInt(data.getString(1)));
-//            userClass.setStepsStartDaily(Integer.parseInt(data.getString(2)));
-//            userClass.setStepsStartWeekly(Integer.parseInt(data.getString(3)));
             data.close();
             db.close();
             return userClass;
-        }
+        }// if he didn't find data it will return the following data V
         return  new UserClass("name",0,0,"1/1/1900",false,0,0,0,"1/1/1900","1/1/1900","1/1/1900");
     }
 
 
-    public void updateUserClass( String id, UserClass userClass){
+    public void updateUserClass( String id, UserClass userClass){//updating user by id as location and inserting UserClass as data
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "UPDATE " + TABLE_NAME + " SET " +
                 COLUMN_USER_NAME+" = '" + userClass.getUserName()+"' , "+
@@ -193,19 +188,5 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 COLUMN_ZERO_DATE_WEEKLY+" = '" +userClass.getZeroDateOfWeekly().getDate()+ "' WHERE " + COLUMN_ID + " = '" + id + "'";
         db.execSQL(query);
     }
-//
-//    /**
-//     * Delete from database
-//     * @param id
-//     * @param name
-//     */
-//    public void deleteName(int id, String name){
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        String query = "DELETE FROM " + TABLE_NAME + " WHERE "
-//                + COLUMN_ID + " = '" + id + "'" +
-//                " AND " + COLUMN_NAME + " = '" + name + "'";
-//        Log.d(TAG, "deleteName: query: " + query);
-//        Log.d(TAG, "deleteName: Deleting " + name + " from database.");
-//        db.execSQL(query);
-//    }
+
 }

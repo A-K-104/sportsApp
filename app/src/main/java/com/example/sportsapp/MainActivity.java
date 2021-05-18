@@ -22,12 +22,8 @@ import android.widget.Toast;
 
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
     SensorManager sensorManager;
@@ -44,8 +40,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         userClass = (UserClass) getIntent().getSerializableExtra("USER_CLASS");
-        tvSteps = (TextView) findViewById(R.id.tv_steps_taken);//link the textbox to java
-        tvMaxSteps = (TextView) findViewById(R.id.tv_total_max);//link the textbox to java
+        tvSteps = (TextView) findViewById(R.id.tv_steps_taken);
+        tvMaxSteps = (TextView) findViewById(R.id.tv_total_max);
         btWorkout = (Button) findViewById(R.id.workouts_bt);
         btAbout = (Button) findViewById(R.id.about_bt);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.progress_circular);
@@ -55,10 +51,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         btUpdate = (Button) findViewById(R.id.update_bt);
         databaseHandler = new DatabaseHandler(this);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_DENIED){//check if there is permission for step sensor
-            //ask for permission
+        /**
+         * check if there is permission for step sensor
+         * if I don't have it's asking for permission
+         */
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_DENIED){
             requestPermissions(new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, 0);
         }
+        /**
+         * moves to videos activity
+         */
         btWorkout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,6 +68,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 startActivity(intent);
             }
         });
+        /**
+         * moves to about activity
+         */
         btAbout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,13 +78,23 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 startActivity(intent);
             }
         });
-        btMonthly.setOnClickListener(new View.OnClickListener() {
-
+        /**
+         * moves to user update activity
+         */
+        btUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {//"@color/dark_gray"));
-//                btMonthly.setBackgroundColor(getResources().getColor(R.color.dark_gray));
-//                btDaily.setBackgroundColor(getResources().getColor(R.color.light_gray));
-//                btWeekly.setBackgroundColor(getResources().getColor(R.color.light_gray));
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,UpdateUserActivity.class);
+                intent.putExtra("USER_CLASS",userClass);
+                startActivity(intent);
+            }
+        });
+        /**
+         * change the picked counter to monthly
+         */
+        btMonthly.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 btMonthly.setBackgroundTintList(btMonthly.getResources().getColorStateList(R.color.dark_gray));
                 btDaily.setBackgroundTintList(btDaily.getResources().getColorStateList(R.color.light_gray));
                 btWeekly.setBackgroundTintList(btWeekly.getResources().getColorStateList(R.color.light_gray));
@@ -89,27 +104,27 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 daily=false;
             }
         });
+        /**
+         * change the picked counter to daily
+         */
         btDaily.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {//"@color/dark_gray"));
+            public void onClick(View v) {
                 btMonthly.setBackgroundTintList(btMonthly.getResources().getColorStateList(R.color.light_gray));
                 btDaily.setBackgroundTintList(btDaily.getResources().getColorStateList(R.color.dark_gray));
                 btWeekly.setBackgroundTintList(btWeekly.getResources().getColorStateList(R.color.light_gray));
-//                btMonthly.setBackgroundColor(getResources().getColor(R.color.light_gray));
-//                btDaily.setBackgroundColor(getResources().getColor(R.color.dark_gray));
-//                btWeekly.setBackgroundColor(getResources().getColor(R.color.light_gray));
                 setStepsCounter(dailyStepsMax,userClass.getStepsStartDaily());
                 monthly=false;
                 weekly=false;
                 daily=true;
             }
         });
+        /**
+         * change the picked counter to weekly
+         */
         btWeekly.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                btMonthly.setBackgroundColor(getResources().getColor(R.color.light_gray));
-//                btDaily.setBackgroundColor(getResources().getColor(R.color.light_gray));
-//                btWeekly.setBackgroundColor(getResources().getColor(R.color.dark_gray));
                 btMonthly.setBackgroundTintList(btMonthly.getResources().getColorStateList(R.color.light_gray));
                 btDaily.setBackgroundTintList(btDaily.getResources().getColorStateList(R.color.light_gray));
                 btWeekly.setBackgroundTintList(btWeekly.getResources().getColorStateList(R.color.dark_gray));
@@ -119,14 +134,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 daily=false;
             }
         });
-        btUpdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,UpdateUserActivity.class);
-                intent.putExtra("USER_CLASS",userClass);
-                startActivity(intent);
-            }
-        });
+
     }
 
 
@@ -146,38 +154,41 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onPause() {
         super.onPause();
         running = false;
-
-//        sensorManager.unregisterDynamicSensorCallback(this);
     }
 
+    /**
+     * when detecting change in sensor value.
+     * First it will check if we need to update reset value.
+     * then updating the value of the counter
+     * @param event = sensor value
+     */
     @Override
     public void onSensorChanged(SensorEvent event) {
-
         SimpleDateFormat df1 = new SimpleDateFormat("dd/MM/yyyy");
-        String date1 = df1.format(Calendar.getInstance().getTime());
+        String date1 = df1.format(Calendar.getInstance().getTime());//gets the current date
         DateClass date = new DateClass(date1);
         if(userClass.getZeroDateOfDaily().after( date)) {
             Log.d("MainActivity","your zero day of the day count was restart");
             userClass.setZeroDateOfDaily(date.getDay() + "/" + date.getMonth() + "/" + date.getYear());
             userClass.setStepsStartDaily((int)event.values[0]);
-            databaseHandler.updateUserClass(databaseHandler.findUserIdCursorfromUserName(userClass.getUserName()),userClass);
+            databaseHandler.updateUserClass(databaseHandler.returnUserIdByUserName(userClass.getUserName()),userClass);
         }
         if(userClass.getZeroDateOfWeekly().afterDay( date,7)) {
             Log.d("MainActivity","your zero day of the week was count restart");
             userClass.setZeroDateOfWeekly(date.getDay() + "/" + date.getMonth() + "/" + date.getYear());
             userClass.setStepsStartWeekly((int)event.values[0]);
-            databaseHandler.updateUserClass(databaseHandler.findUserIdCursorfromUserName(userClass.getUserName()),userClass);
+            databaseHandler.updateUserClass(databaseHandler.returnUserIdByUserName(userClass.getUserName()),userClass);
         }
         if(userClass.getZeroDateOfMonthly().afterMonth( date,1)) {
             Log.d("MainActivity","your zero day of the month was count restart");
             userClass.setZeroDateOfMonthly(date.getDay() + "/" + date.getMonth() + "/" + date.getYear());
             userClass.setStepsStartMonthly((int)event.values[0]);
-            databaseHandler.updateUserClass(databaseHandler.findUserIdCursorfromUserName(userClass.getUserName()),userClass);
+            databaseHandler.updateUserClass(databaseHandler.returnUserIdByUserName(userClass.getUserName()),userClass);
         }
 
     if(running){
         currentSteps = (int) event.values[0];
-        if(weekly) {
+        if(weekly) {//set new value for steps depend if we are at weekly/daily/monthly view
             setStepsCounter(weeklyStepsMax, userClass.getStepsStartWeekly());
         }
         else {
@@ -195,10 +206,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+
+    /**
+     * this function change the value of the steps counter in the xml
+     * @param max is the max value that is shown
+     * @param correction is the value that is set the number of steps that is taken by decreasing from the sensor value
+     */
     public void setStepsCounter(int max,int correction){
         tvMaxSteps.setText("/"+max);
         circularProgressBar.setProgressMax(max);
         tvSteps.setText(String.valueOf(currentSteps- correction));
-        circularProgressBar.setProgressWithAnimation(currentSteps- correction, (long) 1000); // =1s
+        circularProgressBar.setProgressWithAnimation(currentSteps- correction, (long) 1000); // =animation time
     }
 }

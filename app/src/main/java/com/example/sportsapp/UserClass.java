@@ -21,7 +21,9 @@ public class UserClass implements Serializable {
     private DateClass zeroDateOfDaily;
     private DateClass zeroDateOfWeekly;
 
-    public UserClass(String name, double weight, double height ,String dateOfBirth,boolean gender,int stepsStartDaily,int stepsStartMonthly,int stepsStartWeekly,String zeroDateOfMonthly,String zeroDateOfDaily,String zeroDateOfWeekly) {
+    public UserClass(String name, double weight, double height ,String dateOfBirth,boolean gender,
+                     int stepsStartDaily,int stepsStartMonthly,int stepsStartWeekly,String zeroDateOfMonthly,
+                     String zeroDateOfDaily,String zeroDateOfWeekly) {
         this.userName = name;
         this.weight = weight;
         this.height = height;
@@ -72,9 +74,11 @@ public class UserClass implements Serializable {
         return 1;
         return 0;
     }
+
     public boolean isGender() {
         return gender;
     }
+
     public int getStepsStartMonthly() {
         return stepsStartMonthly;
     }
@@ -110,13 +114,14 @@ public class UserClass implements Serializable {
     public DateClass getZeroDateOfMonthly() {
         return zeroDateOfMonthly;
     }
+
     public void setZeroDateOfMonthlyString(String zeroDateOfMonthly) {
         this.zeroDateOfMonthly = new DateClass(zeroDateOfMonthly);
     }
+
     public void setZeroDateOfMonthly(String zeroDateOfMonthly) {
         this.zeroDateOfMonthly = new DateClass(zeroDateOfMonthly);
     }
-
 
     public DateClass getZeroDateOfDaily() {
         return zeroDateOfDaily;

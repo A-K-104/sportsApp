@@ -5,24 +5,48 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 
+/**
+ * This class came to replace the non function Date.java
+ * This class save date in 2 formats dd/mm/yyyy or (int Year, int Month, int Day)
+ * implements Serializable --> means that you can pass this class between Intents
+*/
 
 public class DateClass implements Serializable {
     private int day;
     private int month;
     private int year;
 
+    /**
+     * first option of builder gets
+     * @param stringDate  dd/mm/yyyy
+     */
     public  DateClass(String stringDate) {
         setDate(stringDate);
         resetToDate();
     }
 
+    /**
+     * second option of builder gets (int Year, int Month, int Day)
+     * @param year -->the year
+     * @param month-->the month
+     * @param day  -->the day
+     */
     public DateClass(int year, int month, int day) {
         this.day = day;
         this.month = month;
         this.year = year;
         resetToDate();
     }
-
+/**
+ * the function that can transfer string (dd/mm/yyyy) to date
+ * at the fist and second if's we are testing that we are getting string that fit to our format of
+ * @param stringDate dd/mm/yyyu
+ * than we are updating the value of
+    * @this.day by substring until the first '/'
+    * @this.month by substring until the second '/'
+    * @this.year  by saving the end string
+ * in case of failed we are putting 1/1/1900 as def value
+ */
     public void setDate(@NotNull String stringDate) {
         if (stringDate.indexOf("/") != -1) {
             if (stringDate.substring(stringDate.indexOf("/")).indexOf("/") != -1) {
@@ -44,13 +68,21 @@ public class DateClass implements Serializable {
         }
         resetToDate();
     }
-    private void resetToDate() {//reset the date to make sure that it is in the lines of date (like: 32/13/2020-->01/02/2021)
+
+    /**
+     * reformat the date if the month passes the 12 (December) it add a year and goes to January
+     * Make sure that max day suits the mouth ex: 31 in January
+     * every 4 year it make sure that it is allowing 29th in February
+     * ex: 32/13/2020-->01/02/2021
+     */
+    private void resetToDate() {
         while (this.month > 12) {
             this.year++;
             this.month -= 12;
         }
-        while (this.day > 31) {
-            if (this.month == 1 || this.month == 3 || this.month == 5 || this.month == 7 || this.month == 8 || this.month == 10 || this.month == 12) {
+        while (this.day > 31) {//in case that the day is bigger that one month
+            if (this.month == 1 || this.month == 3 || this.month == 5 || this.month == 7 ||
+                    this.month == 8 || this.month == 10 || this.month == 12) {
                 if (this.day > 31) {
                     this.month++;
                     this.day -= 31;
@@ -106,7 +138,13 @@ public class DateClass implements Serializable {
         }
         resetToDateZero();
     }
-    private void resetToDateZero() {//reset the date to make sure that it is in the lines of date (like: 32/13/2020-->01/02/2021)
+    /**
+     * reformat the date if the day passes the 0  it takes a from the month and add to day according to month
+     * Make sure that max day suits the mouth ex: 31 in January
+     * every 4 year it make sure that it is allowing 29th in February
+     * ex: 0/12/2020-->30/11/2020
+     */
+    private void resetToDateZero() {
         while (this.day < 0) {
 
             if (this.month == 1 || this.month == 3 || this.month == 5 || this.month == 7 || this.month == 8 || this.month == 10 || this.month == 12) {
@@ -133,11 +171,13 @@ public class DateClass implements Serializable {
             }
         }
     }
-    public String getDate() {
-        return day +
-                "/" + month +
-                "/" + year;
-    }
+
+    /**
+     * takes witch moth you are in and returns the amount of days
+     * @param month the moth that you are in
+     * @return number of days
+     * for ex: if you are in December (12) it will return 365
+     */
     private int convertMonthIntoDays(int month){
         int days=0;
         while (month>0) {
@@ -155,6 +195,12 @@ public class DateClass implements Serializable {
         }
         return days;
     }
+
+    /**
+     * this function compere 2 dates if the date is after the date it will return true
+     * @param dateClass the date to compere
+     * @return bool
+     */
     public Boolean after(@NotNull DateClass dateClass){
         int compere= 365*this.year;
         int current = 365*dateClass.year;
@@ -170,13 +216,22 @@ public class DateClass implements Serializable {
         }
         return false;
     }
+
+    /**
+     * Those 2 function are using after function just adding days/mounts depends what the user wants
+     * we are decries because we cant increase the current month because we don't want to change the value
+     */
     public Boolean afterDay(@NotNull DateClass dateClass,int plusDays){
         return after(new DateClass(dateClass.year,dateClass.month,dateClass.day-plusDays));
     }
     public Boolean afterMonth(@NotNull DateClass dateClass, int plusMonth){
         return after(new DateClass(dateClass.year,dateClass.month-plusMonth,(dateClass.day+1)));
     }
-
+    public String getDate() {
+        return day +
+                "/" + month +
+                "/" + year;
+    }
 
     public int getDay() {
         return day;
