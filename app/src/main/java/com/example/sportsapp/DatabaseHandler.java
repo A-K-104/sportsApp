@@ -16,11 +16,10 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
+    private static final String TAG = "DatabaseHelper";//tag of db for the logs
 
     private static final int DATABASE_VERSION=1;//version of db
-
     private static final String DATABASE_NAME = "test.db";//name of db
-    private static final String TAG = "DatabaseHelper";//tag of db for the logs
     private static final String TABLE_NAME = "userdata";
     private static final String COLUMN_ID = "id";//id  of line of db
     private static final String COLUMN_MONTHLY="steps_start_monthly";//the number of zero steps in month
@@ -31,7 +30,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String COLUMN_WEIGHT="weight";
     private static final String COLUMN_HEIGHT="height";
     private static final String COLUMN_DATE_OF_BIRTH="date_of_birth";
-    private static final String COLUMN_GENDER="gender";//male=true // female= false
+    private static final String COLUMN_GENDER="gender";//male=true female= false
     private static final String COLUMN_ZERO_DATE_MONTHLY="zeroDateOfMonthly";//the date that we started to count month steps
     private static final String COLUMN_ZERO_DATE_DAILY="zeroDateOfDaily";//the date that we started to count day steps
     private static final String COLUMN_ZERO_DATE_WEEKLY="zeroDateOfWeekly";//the date that we started to count week steps
@@ -48,7 +47,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE "+TABLE_NAME+ " ( "+COLUMN_ID+" INTEGER PRIMARY KEY , "
                 +COLUMN_MONTHLY+" INTEGER, "+COLUMN_DAILY+" INTEGER, "+COLUMN_WEEKLY+" INTEGER, "+COLUMN_USER_NAME+" TEXT, "+COLUMN_USER_PASSWORD+" TEXT, "
-                +COLUMN_WEIGHT+" DOUBLE, "+COLUMN_HEIGHT+" DOUBLE, "+COLUMN_DATE_OF_BIRTH+" TEXT, "+COLUMN_GENDER+" BOOLEAN, "+COLUMN_ZERO_DATE_MONTHLY+" TEXT, "+COLUMN_ZERO_DATE_DAILY+" TEXT, "+COLUMN_ZERO_DATE_WEEKLY+" TEXT)");
+                +COLUMN_WEIGHT+" DOUBLE, "+COLUMN_HEIGHT+" DOUBLE, "+COLUMN_DATE_OF_BIRTH+" TEXT, "+COLUMN_GENDER+" BOOLEAN, "+COLUMN_ZERO_DATE_MONTHLY+" TEXT, "+
+                COLUMN_ZERO_DATE_DAILY+" TEXT, "+COLUMN_ZERO_DATE_WEEKLY+" TEXT)");
     }
 
     @Override
@@ -56,10 +56,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME);
         onCreate(db);
     }
+
     //upload new data row to db
     public boolean createNewRowOfData(UserClass userClass,String userPassword) {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_USER_NAME, userClass.getUserName());
         contentValues.put(COLUMN_USER_PASSWORD, userPassword);
@@ -86,14 +86,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 
-//      Returns all the data table from database
-    public Cursor getDataBase(){
-        SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT * FROM " + TABLE_NAME;
-        Cursor data = db.rawQuery(query, null);
-        return data;
 
-    }
     public String convertCursorToString (Cursor cursor){//converting pointer of row to string of data
         String tableString="";
         if (cursor.moveToFirst() ){
@@ -111,18 +104,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public String returnUserIdByUserName(String userName){//gets username and finds it's id
+        String output;
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT " + COLUMN_ID + " FROM " + TABLE_NAME +
                 " WHERE " + COLUMN_USER_NAME + " = '" + userName + "'";
         Cursor data = db.rawQuery(query, null);
-        String output =convertCursorToString(data);
+         output =convertCursorToString(data);
+        if (data.moveToFirst()) { // check if he finds data in case not it will return null
+            output= data.getString(data.getColumnIndex(COLUMN_ID));
+        }
         db.close();
         data.close();
-        if(output!="") {
-            return output.substring(4, 5);
-        }
-        return null;//in case he didn't find one
+        return output;
     }
+
     public String returnUserPasswordFromUserId(String userId){//returns password from user id
 
         SQLiteDatabase db = this.getWritableDatabase();
