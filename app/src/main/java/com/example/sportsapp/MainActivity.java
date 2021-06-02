@@ -27,7 +27,7 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
     SensorManager sensorManager;
-    TextView tvSteps,tvMaxSteps;
+    TextView tvSteps,tvMaxSteps,tvBmi;
     boolean running= false,weekly=false,daily = true, monthly=false;
     Button btWorkout,btMonthly,btDaily,btWeekly,btAbout,btUpdate;
     CircularProgressBar circularProgressBar;
@@ -42,7 +42,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         userClass = (UserClass) getIntent().getSerializableExtra("USER_CLASS");
         tvSteps = (TextView) findViewById(R.id.tv_steps_taken);
         tvMaxSteps = (TextView) findViewById(R.id.tv_total_max);
-        btWorkout = (Button) findViewById(R.id.workouts_bt);
+        tvBmi = (TextView) findViewById(R.id.bmi_tv);
+        btWorkout = (Button) findViewById(R.id.back_bt);
         btAbout = (Button) findViewById(R.id.about_bt);
         circularProgressBar = (CircularProgressBar) findViewById(R.id.progress_circular);
         btMonthly = (Button) findViewById(R.id.monthly_bt);
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         btUpdate = (Button) findViewById(R.id.update_bt);
         databaseHandler = new DatabaseHandler(this);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        tvBmi.setText("Your BMI:"+String.valueOf(userClass.getBmiDouble()).substring(0,6));
         /**
          * check if there is permission for step sensor
          * if I don't have it's asking for permission

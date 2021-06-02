@@ -24,7 +24,7 @@ public class LogInActivity extends AppCompatActivity {
         DatabaseHandler databaseHandler = new DatabaseHandler(this);
         tvPassword= (TextView) findViewById(R.id.tv_password);
         tvUserName= (TextView) findViewById(R.id.tv_user_name);
-        btLogIn= (Button) findViewById(R.id.bt_login);
+        btLogIn= (Button) findViewById(R.id.log_bt_login);
         tvRegister = (TextView) findViewById(R.id.bt_register);
         btLogIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,5 +59,10 @@ public class LogInActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
     }
+//    @Override
+//    protected void onNightModeChanged(int mode) {
+//        super.onNightModeChanged(mode);
+//    }
 }

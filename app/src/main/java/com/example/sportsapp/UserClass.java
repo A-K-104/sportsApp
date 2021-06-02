@@ -21,20 +21,20 @@ public class UserClass implements Serializable {
     private DateClass zeroDateOfDaily;
     private DateClass zeroDateOfWeekly;
 
-    public UserClass(String name, double weight, double height ,String dateOfBirth,boolean gender,
-                     int stepsStartDaily,int stepsStartMonthly,int stepsStartWeekly,String zeroDateOfMonthly,
-                     String zeroDateOfDaily,String zeroDateOfWeekly) {
+    public UserClass(String name, double weight, double height, String dateOfBirth, boolean gender,
+                     int stepsStartDaily, int stepsStartMonthly, int stepsStartWeekly, String zeroDateOfMonthly,
+                     String zeroDateOfDaily, String zeroDateOfWeekly) {
         this.userName = name;
         this.weight = weight;
         this.height = height;
-        this.dateOfBirth= new DateClass(dateOfBirth);
-        this.zeroDateOfMonthly=new DateClass(zeroDateOfMonthly);
-        this.zeroDateOfDaily=new DateClass(zeroDateOfDaily);
-        this.zeroDateOfWeekly=new DateClass(zeroDateOfWeekly);
+        this.dateOfBirth = new DateClass(dateOfBirth);
+        this.zeroDateOfMonthly = new DateClass(zeroDateOfMonthly);
+        this.zeroDateOfDaily = new DateClass(zeroDateOfDaily);
+        this.zeroDateOfWeekly = new DateClass(zeroDateOfWeekly);
         this.gender = gender;
-        this.stepsStartDaily=stepsStartDaily;
-        this.stepsStartMonthly=stepsStartMonthly;
-        this.stepsStartWeekly=stepsStartWeekly;
+        this.stepsStartDaily = stepsStartDaily;
+        this.stepsStartMonthly = stepsStartMonthly;
+        this.stepsStartWeekly = stepsStartWeekly;
     }
 
     public String getUserName() {
@@ -70,8 +70,8 @@ public class UserClass implements Serializable {
     }
 
     public int getGender() {
-        if(gender)
-        return 1;
+        if (gender)
+            return 1;
         return 0;
     }
 
@@ -107,8 +107,8 @@ public class UserClass implements Serializable {
         this.gender = gender;
     }
 
-    public double getBmiDouble(){
-        return  this.weight/Math.pow((this.height/100),2);
+    public double getBmiDouble() {
+        return this.weight / Math.pow((this.height / 100), 2);
     }
 
     public DateClass getZeroDateOfMonthly() {
@@ -142,8 +142,7 @@ public class UserClass implements Serializable {
     @Override
     public String toString() {
         String tempGender = "female";
-        if (gender)
-        {
+        if (gender) {
             tempGender = "male";
         }
         return "UserClass{" +

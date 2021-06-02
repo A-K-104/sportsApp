@@ -14,8 +14,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
-            android:text="Login"
-            android:textSize="25dp"
+            android:text="@string/login"
+            style="@android:style/TextAppearance.DeviceDefault.Large"
             android:textStyle="bold"
             android:layout_gravity="center"/>
         <TextView
@@ -23,46 +23,48 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="100dp"
             android:layout_marginTop="80dp"
-            android:text="Enter User Name"/>
+            android:text="@string/enter_user_name"
+            style="@android:style/TextAppearance.DeviceDefault.Small"/>
 
         <EditText
             android:id="@+id/tv_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="100dp"
+            android:layout_gravity="center"
             android:ems="10"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="100dp"
             android:layout_marginTop="40dp"
-            android:text="Enter Password"/>
+            android:text="@string/enter_password"
+            style="@android:style/TextAppearance.DeviceDefault.Small"/>
 
         <EditText
             android:id="@+id/tv_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="100dp"
+            android:layout_gravity="center"
             android:inputType="textWebPassword"
             android:ems="10"/>
 
         <Button
-            android:id="@+id/bt_login"
+            android:id="@+id/log_bt_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="160dp"
+            android:layout_gravity="center"
             android:layout_marginTop="110dp"
-            android:text="login" />
+            android:text="@string/login" />
+
         <TextView
             android:id="@+id/bt_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
-            android:text="You are not Registered? Register here"
+            android:text="@string/you_are_not_registered_register_here"
             android:gravity="center"
-            android:textSize="20dp"
+            style="@android:style/TextAppearance.DeviceDefault.Medium"
             android:textColor="#3F51B5"/>
 
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

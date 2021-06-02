@@ -23,18 +23,18 @@ Switch genderSw;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         DatabaseHandler databaseHandler = new DatabaseHandler(this);
-        userNameTv = (TextView) findViewById(R.id.txtName);
-        weightTv = (TextView) findViewById(R.id.txtWeight);
-        heightTv = (TextView) findViewById(R.id.txtHeight);
-        passwordTv = (TextView) findViewById(R.id.txtPwd);
-        dateOfBirthDP = (DatePicker) findViewById(R.id.date_picker);
-        registerBt = (Button) findViewById(R.id.bt_resistor);
-        genderSw = (Switch) findViewById(R.id.genderSw);
-        tvPasswordText= (TextView) findViewById(R.id.sixTxt);
-        tvUserNameText= (TextView) findViewById(R.id.fstTxt);
-        tvWeightText= (TextView) findViewById(R.id.secTxt);
-        tvHeightText= (TextView) findViewById(R.id.thirdTxt);
-        loginTv= (TextView) findViewById(R.id.tv_login);
+        userNameTv = (TextView) findViewById(R.id.reg_name_et);
+        weightTv = (TextView) findViewById(R.id.reg_weight_et);
+        heightTv = (TextView) findViewById(R.id.reg_height_et);
+        passwordTv = (TextView) findViewById(R.id.reg_password_et);
+        dateOfBirthDP = (DatePicker) findViewById(R.id.reg_date_of_birth_picker);
+        registerBt = (Button) findViewById(R.id.reg_bt_resistor);
+        genderSw = (Switch) findViewById(R.id.reg_gender_sw);
+        tvPasswordText= (TextView) findViewById(R.id.reg_password_tv);
+        tvUserNameText= (TextView) findViewById(R.id.reg_name_tv);
+        tvWeightText= (TextView) findViewById(R.id.reg_weight_tv);
+        tvHeightText= (TextView) findViewById(R.id.reg_height_tv);
+        loginTv= (TextView) findViewById(R.id.reg_tv_login);
         /**
          * button that returns us to the previous activity
          */

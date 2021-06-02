@@ -5,43 +5,48 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".VideosActivity">
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <Button
-        android:id="@+id/bt_hand_exercises"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:text="hand exercises"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp" />
-    <Button
-        android:id="@+id/bt_leg_exercises"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:text="leg exercises"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="150dp" />
-    <Button
-        android:id="@+id/bt_stomach_exercises"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:text="stomach exercises"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="250dp" />
-    <Button
-        android:id="@+id/workouts_bt"
-        android:layout_width="75dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="53dp"
-        android:background="@android:color/white"
-        android:text="back"
-        tools:layout_editor_absoluteX="35dp"
-        tools:layout_editor_absoluteY="482dp" />
-</RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/bt_calorie_killer"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:text="calorie killer" />
+
+        <Button
+            android:id="@+id/bt_full_body"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="150dp"
+            android:text="full body" />
+
+        <Button
+            android:id="@+id/bt_stomach_exercises"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="250dp"
+            android:text="stomach exercises" />
+
+        <Button
+            android:id="@+id/back_bt"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="53dp"
+            android:background="@android:color/white"
+            android:text="back"
+            tools:layout_editor_absoluteX="35dp"
+            tools:layout_editor_absoluteY="482dp" />
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -48,8 +48,8 @@ public class DateClass implements Serializable {
  * in case of failed we are putting 1/1/1900 as def value
  */
     public void setDate(@NotNull String stringDate) {
-        if (stringDate.indexOf("/") != -1) {
-            if (stringDate.substring(stringDate.indexOf("/")).indexOf("/") != -1) {
+        if (stringDate.contains("/")) {
+            if (stringDate.substring(stringDate.indexOf("/")).contains("/")) {
                 this.day = Integer.parseInt(stringDate.substring(0, stringDate.indexOf("/")));
                 stringDate = stringDate.substring(stringDate.indexOf("/") + 1);
                 this.month = Integer.parseInt(stringDate.substring(0, stringDate.indexOf("/")));
